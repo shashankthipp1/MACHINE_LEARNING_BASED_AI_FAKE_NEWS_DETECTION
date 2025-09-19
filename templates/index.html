@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            background: linear-gradient(-45deg,rgb(54, 230, 0),rgb(19, 165, 233), #a18cd1, #fbc2eb, #8fd3f4, #84fab0,#ff9a9e,rgb(187, 86, 58),rgb(112, 133, 99),rgb(110, 30, 214),rgb(27, 192, 221));
+            background-size: 600% 600%;
+            animation: gradientBG 20s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 50% 100%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            75% {
+                background-position: 50% 0%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            animation: slideUp 1s ease-out;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 16px;
+        }
+
+        select, input[type="submit"] {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        select {
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        input[type="submit"] {
+            background-color: #2196f3;
+            color: white;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1976d2;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+            animation: fadeIn 1s ease-in;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>⚡ Fake News Detector ⚡</h2>
+        <form method="POST">
+            <div class="animated-box {% if prediction %}active{% endif %}">
+                <textarea name="news" rows="4" placeholder="Enter news statement..." required>{{ statement }}</textarea>
+            </div>
+
+            <label for="language">Select Language:</label>
+            <select name="language" id="language">
+                <option value="en" {% if selected_lang == 'en' %}selected{% endif %}>English</option>
+                <option value="hi" {% if selected_lang == 'hi' %}selected{% endif %}>Hindi</option>
+                <option value="te" {% if selected_lang == 'te' %}selected{% endif %}>Telugu</option>
+                <option value="ta" {% if selected_lang == 'ta' %}selected{% endif %}>Tamil</option>
+                <option value="kn" {% if selected_lang == 'kn' %}selected{% endif %}>Kannada</option>
+            </select><br>
+
+            <input type="submit" value="Predict the Statement">
+        </form>
+
+        {% if prediction %}
+        <div class="results">
+            <h3>🔍 Results:</h3>
+            <ul>
+                <li><strong>Logistic Regression:</strong> {{ prediction["LR"] }}</li>
+                <li><strong>Decision Tree:</strong> {{ prediction["DT"] }}</li>
+                <li><strong>Gradient Boosting:</strong> {{ prediction["GBC"] }}</li>
+                <li><strong>Random Forest:</strong> {{ prediction["RFC"] }}</li>
+            </ul>
+
+            {% if ai_reason %}
+            <div style="margin-top: 20px; text-align: left;">
+                <h4>💡 AI Reasoning:</h4>
+                <p>{{ ai_reason }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
